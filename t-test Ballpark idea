@@ -1,0 +1,60 @@
+import pandas as pd
+from scipy.stats import ttest_ind
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+#Load the data from the Excel spreadsheet
+file_path = r"C:\Users\jhase\Downloads\baseballBP.xlsx"
+data = pd.read_excel(file_path)
+
+#Filter the data for selected teams (e.g., MIL, BOS, NYY, LAD)
+selected_teams = ['MIL', 'BOS', 'NYY', 'LAD']
+filtered_data = data[data['Tm'].isin(selected_teams)]
+
+#Separate the data for home and away games
+home_games = filtered_data[filtered_data['Away'].isna()]
+away_games = filtered_data[~filtered_data['Away'].isna()]
+
+#Perform t-test for each pair of ballparks for the same team
+for team in selected_teams:
+    team_home_data = home_games[home_games['Tm'] == team]['R']
+    team_away_data = away_games[away_games['Tm'] == team]['R']
+    
+    # Perform t-test
+    t_statistic, p_value = ttest_ind(team_home_data, team_away_data)
+    
+    # Display results
+    print(f"T-test for {team}:")
+    print(f"   - T-statistic: {t_statistic}")
+    print(f"   - P-value: {p_value}")
+    print("\n")
+
+#Visualize the results (you can use libraries like matplotlib or seaborn)
+# For example, you can create boxplots to visualize the distribution of runs scored at different ballparks for each team.
+# You can also create bar plots to compare the average runs scored at home and away games for each team.
+
+# Boxplot for runs scored at different ballparks for each team
+plt.figure(figsize=(12, 6))
+sns.boxplot(x='Tm', y='R', hue='Away', data=filtered_data)
+plt.title('Boxplot of Runs Scored at Different Ballparks for Selected Teams')
+plt.xlabel('Team')
+plt.ylabel('Runs Scored')
+plt.show()
+# Boxplot for runs scored at Home ballpark for each team
+plt.figure(figsize=(12, 6))
+sns.boxplot(x='Tm', y='R', data=home_games)
+plt.title('Boxplot of Runs Scored at Home Ballpark for Selected Teams')
+plt.xlabel('Team')
+plt.ylabel('Runs Scored')
+plt.show()
+
+#sudeo code
+#1. Load the data from the Excel spreadsheet
+#2. Filter the data for selected teams (e.g., MIL, BOS, NYY, LAD)
+#3. Separate the data for home and away games
+#4. Perform t-test for each pair of ballparks for the same team
+#5. Visualize the results
+#6. Create boxplots to visualize the distribution of runs scored at different ballparks for each team
+#7. Create bar plots to compare the average runs scored at home and away games for each team
+#8. Display the results of the t-tests and visualizations
+#9. End
